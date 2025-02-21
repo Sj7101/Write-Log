@@ -24,12 +24,6 @@ Include the function in your PowerShell script or dot-source it into your sessio
 
 . .\Write-Log.ps1
 
-Example Commands:
-
-    Write-Log -Type SYS -EventLog -EventID 1005 -Message "System Message injected here"
-    Write-Log -Type ERR -EventLog -EventID 404 -Message "Error injected here"
-    Write-Log -Type INF -EventLog -EventID 100 -Message "Success injected here"
-
 Example usage:
 
     Write-Log -Type SYS -EventLog -EventID 1005 -Message "System Message injected here"
