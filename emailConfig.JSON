@@ -1,0 +1,9 @@
+{
+    "smtp": "smtp.example.com",
+    "to": "recipient@example.com",
+    "cc": "",
+    "bcc": "",
+    "subject": "Error Alert",
+    "from": "sender@example.com",
+    "port": ""
+}
