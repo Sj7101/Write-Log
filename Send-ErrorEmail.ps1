@@ -10,7 +10,7 @@
 
     # Read the email configuration from the JSON file.
     # The JSON file should include properties: smtp, to, cc, bcc, subject, from, and port.
-    $configFile = ".\config.json"
+    $configFile = "$PSScriptRoot\config.json"
     if (-not (Test-Path $configFile)) {
         Write-Log -Type ERR -Message "Configuration file '$configFile' not found."
         return
