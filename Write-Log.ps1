@@ -1,9 +1,9 @@
 ﻿function Write-Log {
     [CmdletBinding()]
     param(
-        # Log type: SYS, INF, or ERR
+        # Log type: SYS, INF, ERR, or WRN
         [Parameter(Mandatory = $true)]
-        [ValidateSet("SYS","INF","ERR")]
+        [ValidateSet("SYS","INF","ERR","WRN")]
         [string]$Type,
         
         # Message to log
@@ -46,7 +46,7 @@
     $Date = Get-Date -Format "MM/dd/yyyy"
     $Time = Get-Date -Format "HH:mm:ss"
 
-    # Build the log entry in the format: [MM/DD/YYYY][HH:mm:ss][SYS/INF/ERR]: MESSAGE
+    # Build the log entry in the format: [MM/DD/YYYY][HH:mm:ss][SYS/INF/ERR/WRN]: MESSAGE
     $LogEntry = "[$Date][$Time][$Type]: $Message"
 
     # Append the log entry to the log file
@@ -55,7 +55,13 @@
     # If the EventLog switch is specified, write the message to the Windows Event Log
     if ($EventLog) {
         # Determine the appropriate event type based on the log type
-        $EntryType = if ($Type -eq "ERR") { "Error" } else { "Information" }
+        $EntryType = if ($Type -eq "ERR") {
+            "Error"
+        } elseif ($Type -eq "WRN") {
+            "Warning"
+        } else {
+            "Information"
+        }
         
         # Use a source name – change "PowerShellScript" if needed.
         $Source = "PowerShellScript"
@@ -67,8 +73,8 @@
         Write-EventLog -LogName Application -Source $Source -EntryType $EntryType -EventId $EventID -Message $Message
     }
 
-    # If the log type is ERR, capture this entry in a global array for notification purposes
-    if ($Type -eq "ERR") {
+    # If the log type is ERR or WRN, capture this entry in a global array for notification purposes
+    if ($Type -eq "ERR" -or $Type -eq "WRN") {
         if (-not $global:ErrorLogBuffer) { $global:ErrorLogBuffer = @() }
         $global:ErrorLogBuffer += $LogEntry
     }
@@ -79,4 +85,5 @@ Example usage:
     Write-Log -Type SYS -EventLog -EventID 1005 -Message "System Message injected here"
     Write-Log -Type ERR -EventLog -EventID 404 -Message "Error injected here"
     Write-Log -Type INF -EventLog -EventID 100 -Message "Success injected here"
+    Write-Log -Type WRN -EventLog -EventID 200 -Message "Warning: Check your configuration"
 #>
